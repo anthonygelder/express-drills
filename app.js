@@ -46,16 +46,20 @@ app.get('/lotto', (req, res) => {
     const lotto = [];
     let count = 0;
 
+    if (!numbers) {
+        return res.status(400).send('Please provide numbers');
+    }
+
+    if (numbers.length < 6) {
+        return res.status(400).send('Must enter 6 numbers');
+    }
+
     for(let i = 0; i < 6; i++) {
         const random = Math.floor((Math.random() * 20) + 1)
         lotto.push(random)
     }
 
-    console.log('numbers', numbers)
-    console.log('lotto', lotto)
-
     for(let i = 0; i < numbers.length; i++) {
-        
         for(let j = 0; j < lotto.length; j++) {
             if (parseInt(numbers[i]) === lotto[j]) {
                 count++;
@@ -66,11 +70,14 @@ app.get('/lotto', (req, res) => {
 
     if(count < 4) {
         res.send("Sorry, you lose")
-    } else {
+    } else if (count === 4) {
+        res.send("Congratulations, you win a free ticket")
+    } else if (count === 5) {
         res.send("Congratulations! You win $100!")
+    } else {
+        res.send("Wow! Unbelievable! You could have won the mega millions!")
     }
 
-    
 })
 
 
